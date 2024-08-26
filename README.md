@@ -12,7 +12,7 @@ A .bin file can be thought of as a list of timestamped "events" where each event
 
 Each event consists of:
 
-1. a timestamp,
+1. a timestamp, in milliseconds,
 2. an event id indicating the event type, and
 3. either one or two numeric values depending on whether the chart uses the "old" or "new" format.
 
@@ -24,21 +24,21 @@ Excerpt from V [Hyper] (old format - only one numeric value):
 
 ```
 <...>
-1:13.600  measure 0
-1:13.600  key     5
-1:13.800  key     7
-1:14.000  key     2
-1:14.100  key     3
-1:14.200  key     4
-1:14.300  key     5
-1:14.400  key     6
-1:14.600  key     8
-1:14.800  key     3
-1:14.900  key     4
-1:15.000  key     5
-1:15.100  key     6
-1:15.200  measure 0
-1:15.200  key     7
+73600 measure 0
+73600 key     5
+73800 key     7
+74000 key     2
+74100 key     3
+74200 key     4
+74300 key     5
+74400 key     6
+74600 key     8
+74800 key     3
+74900 key     4
+75000 key     5
+75100 key     6
+75200 measure 0
+75200 key     7
 <...>
 ```
 
@@ -46,18 +46,18 @@ Excerpt from IDM UPPER [Normal] (new format - two numeric values):
 
 ```
 <...>
-0:36.000  measure 0 0
-0:36.000  key     8 1000
-0:36.000  key     2 0
-0:36.333  key     3 0
-0:36.666  key     4 0
-0:37.000  key     5 0
-0:37.333  measure 0 0
-0:37.333  key     2 1000
-0:37.333  key     8 0
-0:37.666  key     7 0
-0:38.000  key     6 0
-0:38.333  key     5 0
+36000 measure 0 0
+36000 key     8 1000
+36000 key     2 0
+36333 key     3 0
+36666 key     4 0
+37000 key     5 0
+37333 measure 0 0
+37333 key     2 1000
+37333 key     8 0
+37666 key     7 0
+38000 key     6 0
+38333 key     5 0
 <...>
 ```
 
