@@ -8,7 +8,7 @@ Since .bin files come from .ifs files, you will probably want [ifstools](https:/
 
 ### A brief intro to pop'n music's chart file
 
-A .bin file can be thought of as a list of timestamped "events" where each event describes something that happens in the chart at that timestamp: a note, a bpm change, the start of a measure or beat, etc.
+A .bin file can be thought of as a list of timestamped "events" where each event describes something that happens in the chart at that timestamp: a note, a bpm change, the start of a measure, etc.
 
 Each event consists of:
 
@@ -25,20 +25,20 @@ Excerpt from V [Hyper] (old format - only one numeric value):
 ```
 <...>
 73600 measure 0
-73600 key     5
-73800 key     7
-74000 key     2
-74100 key     3
-74200 key     4
-74300 key     5
-74400 key     6
-74600 key     8
-74800 key     3
-74900 key     4
-75000 key     5
-75100 key     6
+73600 key     4
+73800 key     6
+74000 key     1
+74100 key     2
+74200 key     3
+74300 key     4
+74400 key     5
+74600 key     7
+74800 key     2
+74900 key     3
+75000 key     4
+75100 key     5
 75200 measure 0
-75200 key     7
+75200 key     6
 <...>
 ```
 
@@ -47,17 +47,17 @@ Excerpt from IDM UPPER [Normal] (new format - two numeric values):
 ```
 <...>
 36000 measure 0 0
-36000 key     8 1000
-36000 key     2 0
-36333 key     3 0
-36666 key     4 0
-37000 key     5 0
+36000 key     7 1000
+36000 key     1 0
+36333 key     2 0
+36666 key     3 0
+37000 key     4 0
 37333 measure 0 0
-37333 key     2 1000
-37333 key     8 0
-37666 key     7 0
-38000 key     6 0
-38333 key     5 0
+37333 key     1 1000
+37333 key     7 0
+37666 key     6 0
+38000 key     5 0
+38333 key     4 0
 <...>
 ```
 
@@ -67,7 +67,7 @@ The second numeric value (only present in the new format) is only used for `key`
 
 How do you know which format a chart uses? Any chart created since Usaneko (including new charts for songs from old versions) will use the new format. Older charts will use the old format.
 
-### parse_chart.py
+### [parse_chart.py](parse_chart.py)
 
 Provides a util function that parses a .bin file into events and returns a list of events with the values decoded into a more human readable format.
 
@@ -97,18 +97,7 @@ $ python parse_chart.py --bin-file v_hyper.bin --format old | head -20
 1400,sample,20480,0
 ```
 
-### summarize_chart.py
-
-Provides a util function that, for a given .bin file, returns a summary of the chart (note count, bpm, duration, etc.) as a dictionary.
-
-When run standalone, outputs the summary to stdout as a JSON object.
-
-```
-$ python summarize_chart.py --bin-file v_hyper.bin --format old
-{"notes":1134,"hold_notes":0,"bpm":"150","bpm_steps":[150],"duration":124,"timing":"standard","timing_steps":[[118,122,126,132,136,140]]}
-```
-
-### serialize_chart.py
+### [serialize_chart.py](serialize_chart.py)
 
 Provides a util function that, for a given .bin file, returns a subset of the events _grouped by timestamp_, as a dictionary that maps timestamp to another dictionary mapping event name to event value.
 
@@ -136,4 +125,15 @@ timestamp,key,keyon,keyoff,measurebeatend,bpm
 3200,2,,,m,
 3300,8,,,,
 3400,32,,,,
+```
+
+### [summarize_chart.py](summarize_chart.py)
+
+Provides a util function that, for a given .bin file, returns a summary of the chart (note count, bpm, duration, etc.) as a dictionary.
+
+When run standalone, outputs the summary to stdout as a JSON object.
+
+```
+$ python summarize_chart.py --bin-file v_hyper.bin --format old
+{"notes":1134,"hold_notes":0,"bpm":"150","bpm_steps":[150],"duration":124,"timing":"standard","timing_steps":[[118,122,126,132,136,140]]}
 ```
