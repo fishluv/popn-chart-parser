@@ -135,5 +135,5 @@ When run standalone, outputs the summary to stdout as a JSON object.
 
 ```
 $ python summarize_chart.py --bin-file v_hyper.bin --format old
-{"notes":1134,"hold_notes":0,"bpm":"150","bpm_steps":[150],"duration":124,"timing":"standard","timing_steps":[[118,122,126,132,136,140]]}
+{"notes":1134,"hold_notes":0,"bpm":"150","bpm_primary":150,"bpm_primary_type":"majority","bpm_steps":[150],"duration":124,"timing":"standard","timing_steps":[[118,122,126,132,136,140]]}
 ```

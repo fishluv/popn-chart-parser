@@ -1,4 +1,5 @@
 from collections import defaultdict
+from operator import itemgetter
 
 from parse_chart import parse_chart
 
@@ -10,7 +11,7 @@ def summarize_chart(bin_filename, new_format):
   min_bpm = 9999
   max_bpm = 0
   bpm_steps = []
-  duration = 0
+
   # A "frameset" is a list of 6 values defining, in order,
   # [0] start of early bad window
   # [1] start of early good window
@@ -22,6 +23,11 @@ def summarize_chart(bin_filename, new_format):
   # These "frame" values range from 104 to 154 and are used to calculate
   # the sizes of the judgment windows, in milliseconds.
   framesets_by_ts = defaultdict(lambda: [None] * 6)
+
+  duration_ms = 0
+  last_bpm = 0
+  last_bpm_ts = 0
+  duration_by_bpm = defaultdict(int)
 
   for timestamp, event_name, value, length in events:
     if event_name in ["key", "timesig"]:
@@ -44,14 +50,22 @@ def summarize_chart(bin_filename, new_format):
       min_bpm = min(min_bpm, value)
       max_bpm = max(max_bpm, value)
       bpm_steps.append(value)
-    elif event_name == "end" and not duration: # charts sometimes have multiple `end`s. only use first.
-      duration = timestamp // 1000
+      duration_by_bpm[value] += timestamp - last_bpm_ts
+      last_bpm_ts = timestamp
+      last_bpm = value
+    elif event_name == "end" and not duration_ms: # charts sometimes have multiple `end`s. only use first.
+      duration_ms = timestamp
 
-  if not duration:
+  if not duration_ms:
     # A handful of charts are missing an `end` event. Just assume value from last timestamp.
     # omni/labpop_np, omni/animer_np, omni/latinpop_2nd_op
-    last_timestamp = events[-1][0]
-    duration = last_timestamp // 1000
+    duration_ms = events[-1][0]
+
+  duration = duration_ms // 1000
+
+  duration_by_bpm[last_bpm] += duration_ms - last_bpm_ts
+  bpm_primary, bpm_primary_duration = sorted(duration_by_bpm.items(), key=itemgetter(1), reverse=True)[0]
+  bpm_primary_type = "majority" if bpm_primary_duration > duration_ms / 2 else "plurality"
 
   # Ensure this is sorted by timestamp.
   # (This is not guaranteed since it is possible for smaller timestamps
@@ -67,6 +81,8 @@ def summarize_chart(bin_filename, new_format):
     "notes": notes,
     "hold_notes": hold_notes,
     "bpm": str(min_bpm) if min_bpm == max_bpm else "%s-%s" % (min_bpm, max_bpm),
+    "bpm_primary": bpm_primary,
+    "bpm_primary_type": bpm_primary_type,
     "bpm_steps": bpm_steps,
     "duration": duration,
     "timing": timing,
