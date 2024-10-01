@@ -65,7 +65,12 @@ def summarize_chart(bin_filename, new_format):
 
   duration_by_bpm[last_bpm] += duration_ms - last_bpm_ts
   bpm_primary, bpm_primary_duration = sorted(duration_by_bpm.items(), key=itemgetter(1), reverse=True)[0]
-  bpm_primary_type = "majority" if bpm_primary_duration > duration_ms / 2 else "plurality"
+  if bpm_primary_duration == duration_ms:
+    bpm_primary_type = "totality"
+  elif bpm_primary_duration > duration_ms / 2:
+    bpm_primary_type = "majority"
+  else:
+    bpm_primary_type = "plurality"
 
   # Ensure this is sorted by timestamp.
   # (This is not guaranteed since it is possible for smaller timestamps
