@@ -50,7 +50,8 @@ def summarize_chart(bin_filename, new_format):
       min_bpm = min(min_bpm, value)
       max_bpm = max(max_bpm, value)
       bpm_steps.append(value)
-      duration_by_bpm[value] += timestamp - last_bpm_ts
+      if last_bpm:
+        duration_by_bpm[last_bpm] += timestamp - last_bpm_ts
       last_bpm_ts = timestamp
       last_bpm = value
     elif event_name == "end" and not duration_ms: # charts sometimes have multiple `end`s. only use first.
