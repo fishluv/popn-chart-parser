@@ -76,12 +76,18 @@ if __name__ == "__main__":
   parser = argparse.ArgumentParser()
   parser.add_argument("--bin-file", required=True)
   parser.add_argument("--format", help="'new' or 'old'", required=True)
+  parser.add_argument("--out-file", help="Output file. If omitted, will output to stdout.")
   args = parser.parse_args()
 
   bin_filename = args.bin_file
   new_format = args.format == "new"
+  out_filename = args.out_file
 
   events = parse_chart(bin_filename, new_format, True)
 
-  for timestamp, event_name, value, length in events:
+  if out_filename:
+    with open(out_filename, "w") as f:
+      for timestamp, event_name, value, length in events:
+        f.write("%s,%s,%s,%s\n" % (timestamp, event_name, value, length))
+  else:
     print("%s,%s,%s,%s" % (timestamp, event_name, value, length))
