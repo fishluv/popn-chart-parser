@@ -110,11 +110,18 @@ if __name__ == "__main__":
   parser = argparse.ArgumentParser()
   parser.add_argument("--bin-file", required=True)
   parser.add_argument("--format", help="'new' or 'old'", required=True)
+  parser.add_argument("--out-file", help="Output file. If omitted, will output to stdout.")
   args = parser.parse_args()
 
   bin_filename = args.bin_file
   new_format = args.format == "new"
+  out_filename = args.out_file
 
   summary = summarize_chart(bin_filename, new_format)
+  summary_json = json.dumps(summary, separators=(",", ":"))
 
-  print(json.dumps(summary, separators=(",", ":")))
+  if out_filename:
+    with open(out_filename, "w") as f:
+      f.write(summary_json)
+  else:
+    print(summary_json)
