@@ -1,6 +1,9 @@
 from collections import defaultdict
 
-from parse_chart import parse_chart
+try:
+  from parse_chart import parse_chart
+except ImportError:
+  from .parse_chart import parse_chart
 
 def get_events_by_timestamp(bin_filename, new_format):
   events = parse_chart(bin_filename, new_format)
