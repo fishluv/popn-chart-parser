@@ -2,12 +2,12 @@ from collections import defaultdict
 from operator import itemgetter
 
 try:
-  from parse_chart import parse_chart
+  from parse_chart import get_events
 except ImportError:
-  from .parse_chart import parse_chart
+  from .parse_chart import get_events
 
 def summarize_chart(bin_filename, new_format):
-  events = parse_chart(bin_filename, new_format)
+  events = get_events(bin_filename, new_format)
 
   notes = 0
   hold_notes = 0
