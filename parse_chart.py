@@ -1,7 +1,6 @@
 def parse_chart(bin_filename, new_format, debug=False):
   if not bin_filename.endswith(".bin"):
-    print("[fatal] only bin files are supported")
-    exit(1)
+    raise RuntimeError("only bin files are supported")
 
   event_id_to_name = {
     0x0145: "key",
@@ -41,8 +40,7 @@ def parse_chart(bin_filename, new_format, debug=False):
           if file.tell() - event_size == 0 and event_id == 0:
             print("[warn] are you sure the format is correct?")
         if unknown_events > 30:
-          print("[fatal] too many unknown events")
-          exit(1)
+          raise RuntimeError("too many unknown events")
       
       if new_format:
         events.append((
