@@ -98,4 +98,10 @@ def get_events_by_timestamp(bin_filename, new_format):
           events_by_timestamp[timestamp]["key"] = 0
         events_by_timestamp[timestamp]["key"] |= 1 << btn_ord
 
+    elif event_name == "timing":
+      if "timing" not in events_by_timestamp[timestamp]:
+        events_by_timestamp[timestamp]["timing"] = {}
+      frame_idx, frame_val = value >> 12, value & 0xff
+      events_by_timestamp[timestamp]["timing"][frame_idx] = frame_val
+
   return events_by_timestamp

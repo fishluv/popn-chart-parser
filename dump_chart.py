@@ -46,14 +46,30 @@ if __name__ == "__main__":
   else: # serial
     events_by_timestamp = get_events_by_timestamp(bin_filename, new_format)
 
-    print("timestamp,key,keyon,keyoff,measurebeatend,bpm")
-    for timestamp in sorted(events_by_timestamp.keys()):
-      events = events_by_timestamp[timestamp]
-      print(",".join(map(str, [
-        timestamp,
-        events.get("key", ""),
-        events.get("keyon", ""),
-        events.get("keyoff", ""),
-        events.get("end", events.get("measure", events.get("beat", ""))),
-        events.get("bpm", ""),
-      ])))
+    has_variable_timing = len([events for events in events_by_timestamp.values() if "timing" in events]) >= 2
+
+    if has_variable_timing:
+      print("timestamp,key,keyon,keyoff,measurebeatend,bpm,timing")
+      for timestamp in sorted(events_by_timestamp.keys()):
+        events = events_by_timestamp[timestamp]
+        print(",".join(map(str, [
+          timestamp,
+          events.get("key", ""),
+          events.get("keyon", ""),
+          events.get("keyoff", ""),
+          events.get("end", events.get("measure", events.get("beat", ""))),
+          events.get("bpm", ""),
+          "-".join(map(str, events.get("timing", {}).values())),
+        ])))
+    else:
+      print("timestamp,key,keyon,keyoff,measurebeatend,bpm")
+      for timestamp in sorted(events_by_timestamp.keys()):
+        events = events_by_timestamp[timestamp]
+        print(",".join(map(str, [
+          timestamp,
+          events.get("key", ""),
+          events.get("keyon", ""),
+          events.get("keyoff", ""),
+          events.get("end", events.get("measure", events.get("beat", ""))),
+          events.get("bpm", ""),
+        ])))
