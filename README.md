@@ -69,12 +69,21 @@ How do you know which format a chart uses? Any chart created since Usaneko (incl
 
 ### [parse_chart.py](parse_chart.py)
 
-Provides a util function that parses a .bin file into events and returns a list of events with the values decoded into a more human readable format.
+Provides util functions that parse a .bin file into human readable events.
 
-When run standalone, outputs the events to stdout as headerless CSV.
+- `get_events` returns a list of all events, directly decoded from the .bin file.
+- `get_events_by_timestamp` goes one step further and groups those events by timestamp. Note: this function only returns a subset of events.
+
+See `dump_chart.py` for standalone usage.
+
+### [dump_chart.py](dump_chart.py)
+
+Standalone script that serves as a wrapper or runner for `parse_chart.py`.
+
+The `--raw` option corresponds to `parse_chart.get_events`, and outputs unheadered CSV.
 
 ```
-$ python parse_chart.py --bin-file v_hyper.bin --format old | head -20
+$ python dump_chart.py --bin-file v_hyper.bin --format old --raw | head -20
 0,timesig,1028,0
 0,timing,118,0
 0,timing,4218,0
@@ -97,14 +106,10 @@ $ python parse_chart.py --bin-file v_hyper.bin --format old | head -20
 1400,sample,20480,0
 ```
 
-### [serialize_chart.py](serialize_chart.py)
-
-Provides a util function that, for a given .bin file, returns a subset of the events _grouped by timestamp_, as a dictionary that maps timestamp to another dictionary mapping event name to event value.
-
-When run standalone, outputs the events to stdout as headered CSV.
+The `--serial` option corresponds to `parse_chart.get_events_by_timestamp`, and outputs _headered_ CSV.
 
 ```
-$ python serialize_chart.py --bin-file v_hyper.bin --format old | head -20
+$ python dump_chart.py --bin-file v_hyper.bin --format old --serial | head -20
 timestamp,key,keyon,keyoff,measurebeatend,bpm
 0,,,,m,150
 400,,,,b,
@@ -131,7 +136,7 @@ timestamp,key,keyon,keyoff,measurebeatend,bpm
 
 Provides a util function that, for a given .bin file, returns a summary of the chart (note count, bpm, duration, etc.) as a dictionary.
 
-When run standalone, outputs the summary to stdout as a JSON object.
+When run standalone, outputs the summary to stdout as a JSON object. Also supports outputting directly to a specified file.
 
 ```
 $ python summarize_chart.py --bin-file v_hyper.bin --format old

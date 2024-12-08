@@ -1,10 +1,7 @@
 """
 Usage:
-  # Extract bin files from ifs first
-  ifstools iidx_kida.ifs
-
   # Print events to stdout
-  python dump_chart.py --bin-file iidx_kida_ifs/iidx_kida_op.bin --format new
+  python dump_chart.py --bin-file <chart_bin_file> --format [old|new] [--raw|--serial]
 """
 if __name__ == "__main__":
   import argparse
