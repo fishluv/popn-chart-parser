@@ -6,6 +6,7 @@ __pycache__/
 
 *.2dx
 *.bin
+*.csv
 *.ifs
 *ifs/
 *.json
