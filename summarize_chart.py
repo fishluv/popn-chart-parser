@@ -14,6 +14,7 @@ def summarize_chart(bin_filename, new_format):
   min_bpm = 9999
   max_bpm = 0
   bpm_steps = []
+  timesig_steps = []
 
   # A "frameset" is a list of 6 values defining, in order,
   # [0] start of early bad window
@@ -33,17 +34,13 @@ def summarize_chart(bin_filename, new_format):
   duration_by_bpm = defaultdict(int)
 
   for timestamp, event_name, value, length in events:
-    if event_name in ["key", "timesig"]:
-      val1, val2 = value & 0xff, value >> 8
-      value = "%s/%s" % (val1, val2)
-      if event_name == "key":
+    if event_name == "key":
+      notes += 1
+      if length > 0:
         notes += 1
-        if length > 0:
-          notes += 1
-          hold_notes += 1
+        hold_notes += 1
     elif event_name in ["sample", "sample2", "timing"]:
       val1, val2 = value & 0xff, value >> 12
-      value = "%s/%s" % (val1, val2)
       if event_name == "timing":
         frame_idx, frame_val = val2, val1
         # Rarely, charts will specify multiple timings on the same timestamp.
@@ -59,6 +56,9 @@ def summarize_chart(bin_filename, new_format):
       last_bpm = value
     elif event_name == "end" and not duration_ms: # charts sometimes have multiple `end`s. only use first.
       duration_ms = timestamp
+    elif event_name == "timesig":
+      top, bottom = value >> 8, value & 0xff
+      timesig_steps.append(f"{top}/{bottom}")
 
   if not duration_ms:
     # A handful of charts are missing an `end` event. Just assume value from last timestamp.
@@ -94,6 +94,7 @@ def summarize_chart(bin_filename, new_format):
     "bpm_primary_type": bpm_primary_type,
     "bpm_steps": bpm_steps,
     "duration": duration,
+    "timesig_steps": timesig_steps,
     "timing": timing,
     "timing_steps": framesets,
   }
