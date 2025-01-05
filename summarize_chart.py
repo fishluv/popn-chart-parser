@@ -32,6 +32,9 @@ def summarize_chart(bin_filename, new_format):
   last_bpm = 0
   last_bpm_ts = 0
   duration_by_bpm = defaultdict(int)
+  last_timesig = 0
+  last_timesig_ts = 0
+  duration_by_timesig = defaultdict(int)
 
   for timestamp, event_name, value, length in events:
     if event_name == "key":
@@ -58,7 +61,12 @@ def summarize_chart(bin_filename, new_format):
       duration_ms = timestamp
     elif event_name == "timesig":
       top, bottom = value >> 8, value & 0xff
-      timesig_steps.append(f"{top}/{bottom}")
+      timesig = f"{top}/{bottom}"
+      timesig_steps.append(timesig)
+      if last_timesig:
+        duration_by_timesig[last_timesig] += timestamp - last_timesig_ts
+      last_timesig_ts = timestamp
+      last_timesig = timesig
 
   if not duration_ms:
     # A handful of charts are missing an `end` event. Just assume value from last timestamp.
@@ -75,6 +83,15 @@ def summarize_chart(bin_filename, new_format):
     bpm_primary_type = "majority"
   else:
     bpm_primary_type = "nonmajority"
+
+  duration_by_timesig[last_timesig] += duration_ms - last_timesig_ts
+  timesig_primary, timesig_primary_duration = sorted(duration_by_timesig.items(), key=itemgetter(1), reverse=True)[0]
+  if timesig_primary_duration == duration_ms:
+    timesig_primary_type = "constant"
+  elif timesig_primary_duration > duration_ms / 2:
+    timesig_primary_type = "majority"
+  else:
+    timesig_primary_type = "nonmajority"
 
   # Ensure this is sorted by timestamp.
   # (This is not guaranteed since it is possible for smaller timestamps
@@ -94,6 +111,8 @@ def summarize_chart(bin_filename, new_format):
     "bpm_primary_type": bpm_primary_type,
     "bpm_steps": bpm_steps,
     "duration": duration,
+    "timesig_primary": timesig_primary,
+    "timesig_primary_type": timesig_primary_type,
     "timesig_steps": timesig_steps,
     "timing": timing,
     "timing_steps": framesets,
