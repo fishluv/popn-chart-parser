@@ -138,7 +138,7 @@ Provides a util function that, for a given .bin file, returns a summary of the c
 
 When run standalone, outputs the summary to stdout as a JSON object. Also supports outputting directly to a specified file.
 
-```
+````
 $ python summarize_chart.py --bin-file v_hyper.bin --format old
-{"notes":1134,"hold_notes":0,"bpm":"150","bpm_primary":150,"bpm_primary_type":"majority","bpm_steps":[150],"duration":124,"timing":"standard","timing_steps":[[118,122,126,132,136,140]]}
-```
+{"notes":1134,"hold_notes":0,"bpm":"150","bpm_main":150,"bpm_main_type":"constant","bpm_steps":[150],"duration":124,"timesig_main":"4/4","timesig_main_type":"constant","timesig_steps":["4/4"],"timing":"standard","timing_steps":[[118,122,126,132,136,140]]}```
+````

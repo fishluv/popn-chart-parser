@@ -76,22 +76,22 @@ def summarize_chart(bin_filename, new_format):
   duration = duration_ms // 1000
 
   duration_by_bpm[last_bpm] += duration_ms - last_bpm_ts
-  bpm_primary, bpm_primary_duration = sorted(duration_by_bpm.items(), key=itemgetter(1), reverse=True)[0]
-  if bpm_primary_duration == duration_ms:
-    bpm_primary_type = "constant"
-  elif bpm_primary_duration > duration_ms / 2:
-    bpm_primary_type = "majority"
+  bpm_main, bpm_main_duration = sorted(duration_by_bpm.items(), key=itemgetter(1), reverse=True)[0]
+  if bpm_main_duration == duration_ms:
+    bpm_main_type = "constant"
+  elif bpm_main_duration > duration_ms / 2:
+    bpm_main_type = "majority"
   else:
-    bpm_primary_type = "nonmajority"
+    bpm_main_type = "nonmajority"
 
   duration_by_timesig[last_timesig] += duration_ms - last_timesig_ts
-  timesig_primary, timesig_primary_duration = sorted(duration_by_timesig.items(), key=itemgetter(1), reverse=True)[0]
-  if timesig_primary_duration == duration_ms:
-    timesig_primary_type = "constant"
-  elif timesig_primary_duration > duration_ms / 2:
-    timesig_primary_type = "majority"
+  timesig_main, timesig_main_duration = sorted(duration_by_timesig.items(), key=itemgetter(1), reverse=True)[0]
+  if timesig_main_duration == duration_ms:
+    timesig_main_type = "constant"
+  elif timesig_main_duration > duration_ms / 2:
+    timesig_main_type = "majority"
   else:
-    timesig_primary_type = "nonmajority"
+    timesig_main_type = "nonmajority"
 
   # Ensure this is sorted by timestamp.
   # (This is not guaranteed since it is possible for smaller timestamps
@@ -107,12 +107,12 @@ def summarize_chart(bin_filename, new_format):
     "notes": notes,
     "hold_notes": hold_notes,
     "bpm": str(min_bpm) if min_bpm == max_bpm else "%s-%s" % (min_bpm, max_bpm),
-    "bpm_primary": bpm_primary,
-    "bpm_primary_type": bpm_primary_type,
+    "bpm_main": bpm_main,
+    "bpm_main_type": bpm_main_type,
     "bpm_steps": bpm_steps,
     "duration": duration,
-    "timesig_primary": timesig_primary,
-    "timesig_primary_type": timesig_primary_type,
+    "timesig_main": timesig_main,
+    "timesig_main_type": timesig_main_type,
     "timesig_steps": timesig_steps,
     "timing": timing,
     "timing_steps": framesets,
