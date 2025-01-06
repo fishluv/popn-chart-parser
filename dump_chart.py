@@ -53,27 +53,13 @@ if __name__ == "__main__":
       headers.append("timing")
 
     if out_filename:
-      with open(out_filename, "w") as f:
-        f.write(",".join(headers) + "\n")
-
-        for timestamp in sorted(events_by_timestamp.keys()):
-          events = events_by_timestamp[timestamp]
-          vals = [
-            timestamp,
-            events.get("key", ""),
-            events.get("keyon", ""),
-            events.get("keyoff", ""),
-            events.get("end", events.get("measure", events.get("beat", ""))),
-            events.get("bpm", ""),
-          ]
-
-          if has_variable_timing:
-            vals.append(timing_event_tss.index(timestamp) if "timing" in events else "")
-
-          f.write(",".join(map(str, vals)) + "\n")
-
+      f = open(out_filename, "w")
+      out_func = lambda s: f.write(s + "\n")
     else:
-      print(",".join(headers))
+      out_func = print
+
+    try:
+      out_func(",".join(headers))
 
       for timestamp in sorted(events_by_timestamp.keys()):
         events = events_by_timestamp[timestamp]
@@ -89,5 +75,7 @@ if __name__ == "__main__":
         if has_variable_timing:
           vals.append(timing_event_tss.index(timestamp) if "timing" in events else "")
 
-        print(",".join(map(str, vals)))
-
+        out_func(",".join(map(str, vals)))
+    finally:
+      if out_filename:
+        f.close()
