@@ -47,58 +47,47 @@ if __name__ == "__main__":
     events_by_timestamp = get_events_by_timestamp(bin_filename, new_format)
     timing_event_tss = [ts for ts, events in events_by_timestamp.items() if "timing" in events]
     has_variable_timing = len([events for events in events_by_timestamp.values() if "timing" in events]) >= 2
+    headers = ["timestamp", "key", "keyon", "keyoff", "measurebeatend", "bpm"]
+
+    if has_variable_timing:
+      headers.append("timing")
 
     if out_filename:
       with open(out_filename, "w") as f:
-        if has_variable_timing:
-          f.write("timestamp,key,keyon,keyoff,measurebeatend,bpm,timing\n")
-          for timestamp in sorted(events_by_timestamp.keys()):
-            events = events_by_timestamp[timestamp]
-            f.write(",".join(map(str, [
-              timestamp,
-              events.get("key", ""),
-              events.get("keyon", ""),
-              events.get("keyoff", ""),
-              events.get("end", events.get("measure", events.get("beat", ""))),
-              events.get("bpm", ""),
-              timing_event_tss.index(timestamp) if "timing" in events else "",
-            ])) + "\n")
-        else:
-          f.write("timestamp,key,keyon,keyoff,measurebeatend,bpm\n")
-          for timestamp in sorted(events_by_timestamp.keys()):
-            events = events_by_timestamp[timestamp]
-            f.write(",".join(map(str, [
-              timestamp,
-              events.get("key", ""),
-              events.get("keyon", ""),
-              events.get("keyoff", ""),
-              events.get("end", events.get("measure", events.get("beat", ""))),
-              events.get("bpm", ""),
-            ])) + "\n")
+        f.write(",".join(headers) + "\n")
+
+        for timestamp in sorted(events_by_timestamp.keys()):
+          events = events_by_timestamp[timestamp]
+          vals = [
+            timestamp,
+            events.get("key", ""),
+            events.get("keyon", ""),
+            events.get("keyoff", ""),
+            events.get("end", events.get("measure", events.get("beat", ""))),
+            events.get("bpm", ""),
+          ]
+
+          if has_variable_timing:
+            vals.append(timing_event_tss.index(timestamp) if "timing" in events else "")
+
+          f.write(",".join(map(str, vals)) + "\n")
 
     else:
-      if has_variable_timing:
-        print("timestamp,key,keyon,keyoff,measurebeatend,bpm,timing")
-        for timestamp in sorted(events_by_timestamp.keys()):
-          events = events_by_timestamp[timestamp]
-          print(",".join(map(str, [
-            timestamp,
-            events.get("key", ""),
-            events.get("keyon", ""),
-            events.get("keyoff", ""),
-            events.get("end", events.get("measure", events.get("beat", ""))),
-            events.get("bpm", ""),
-            timing_event_tss.index(timestamp) if "timing" in events else "",
-          ])))
-      else:
-        print("timestamp,key,keyon,keyoff,measurebeatend,bpm")
-        for timestamp in sorted(events_by_timestamp.keys()):
-          events = events_by_timestamp[timestamp]
-          print(",".join(map(str, [
-            timestamp,
-            events.get("key", ""),
-            events.get("keyon", ""),
-            events.get("keyoff", ""),
-            events.get("end", events.get("measure", events.get("beat", ""))),
-            events.get("bpm", ""),
-          ])))
+      print(",".join(headers))
+
+      for timestamp in sorted(events_by_timestamp.keys()):
+        events = events_by_timestamp[timestamp]
+        vals = [
+          timestamp,
+          events.get("key", ""),
+          events.get("keyon", ""),
+          events.get("keyoff", ""),
+          events.get("end", events.get("measure", events.get("beat", ""))),
+          events.get("bpm", ""),
+        ]
+
+        if has_variable_timing:
+          vals.append(timing_event_tss.index(timestamp) if "timing" in events else "")
+
+        print(",".join(map(str, vals)))
+
