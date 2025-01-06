@@ -47,10 +47,13 @@ if __name__ == "__main__":
     events_by_timestamp = get_events_by_timestamp(bin_filename, new_format)
     timing_event_tss = [ts for ts, events in events_by_timestamp.items() if "timing" in events]
     has_variable_timing = len([events for events in events_by_timestamp.values() if "timing" in events]) >= 2
-    headers = ["timestamp", "key", "keyon", "keyoff", "measurebeatend", "bpm"]
+    has_variable_timesig = len([events for events in events_by_timestamp.values() if "timesig" in events]) >= 2
 
+    headers = ["timestamp", "key", "keyon", "keyoff", "measurebeatend", "bpm"]
     if has_variable_timing:
       headers.append("timing")
+    if has_variable_timesig:
+      headers.append("timesig")
 
     if out_filename:
       f = open(out_filename, "w")
@@ -63,6 +66,7 @@ if __name__ == "__main__":
 
       for timestamp in sorted(events_by_timestamp.keys()):
         events = events_by_timestamp[timestamp]
+
         vals = [
           timestamp,
           events.get("key", ""),
@@ -71,9 +75,10 @@ if __name__ == "__main__":
           events.get("end", events.get("measure", events.get("beat", ""))),
           events.get("bpm", ""),
         ]
-
         if has_variable_timing:
           vals.append(timing_event_tss.index(timestamp) if "timing" in events else "")
+        if has_variable_timesig:
+          vals.append(events.get("timesig", ""))
 
         out_func(",".join(map(str, vals)))
     finally:

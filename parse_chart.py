@@ -70,6 +70,10 @@ def get_events_by_timestamp(bin_filename, new_format):
     if event_name == "bpm":
       events_by_timestamp[timestamp][event_name] = value
     
+    elif event_name == "timesig":
+      top, bottom = value >> 8, value & 0xff
+      events_by_timestamp[timestamp][event_name] = f"{top}/{bottom}"
+
     elif event_name == "end":
       events_by_timestamp[timestamp][event_name] = "e"
     
