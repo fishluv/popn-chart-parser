@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-def get_events(bin_filename, new_format, debug=False):
+def get_events(bin_filename, debug=False):
   if not bin_filename.endswith(".bin"):
     raise RuntimeError("only bin files are supported")
 
@@ -21,10 +21,19 @@ def get_events(bin_filename, new_format, debug=False):
   }
 
   events = []
-  event_size = 12 if new_format else 8
   unknown_events = 0
 
   with open(bin_filename, "rb") as file:
+    # Determine chart format by looking at bytes 0x08-0x10.
+    # If old, first 4 bytes will be 0 (2nd event timestamp)
+    # and second 4 bytes will be nonzero (2nd event data).
+    # If new, first 4 bytes will be 0 (1st event length)
+    # and second 4 bytes will be 0 (2nd event timestamp).
+    file.seek(8)
+    new_format = int.from_bytes(file.read(8)) == 0
+    event_size = 12 if new_format else 8
+    file.seek(0)
+
     while event_bytes := file.read(event_size):
       if len(event_bytes) < event_size:
         if debug:
@@ -40,9 +49,9 @@ def get_events(bin_filename, new_format, debug=False):
         if debug:
           print("[warn] %s: unknown event_id 0x%s with timestamp 0x%s" % (hex(file.tell()-event_size), hex(event_id).lstrip("0x").rjust(4, "0"), hex(timestamp).lstrip("0x").rjust(8, "0")))
           if file.tell() - event_size == 0 and event_id == 0:
-            print("[warn] are you sure the format is correct?")
+            raise RuntimeError("format may be incorrect.")
         if unknown_events > 30:
-          raise RuntimeError("too many unknown events")
+          raise RuntimeError("too many unknown events. format may be incorrect.")
       
       if new_format:
         events.append((
@@ -61,8 +70,8 @@ def get_events(bin_filename, new_format, debug=False):
 
   return events
 
-def get_events_by_timestamp(bin_filename, new_format):
-  events = get_events(bin_filename, new_format)
+def get_events_by_timestamp(bin_filename):
+  events = get_events(bin_filename)
 
   events_by_timestamp = defaultdict(dict)
 

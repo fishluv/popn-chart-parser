@@ -83,7 +83,7 @@ Standalone script that serves as a wrapper or runner for `parse_chart.py`.
 The `--raw` option corresponds to `parse_chart.get_events`, and outputs unheadered CSV.
 
 ```
-$ python dump_chart.py --bin-file v_hyper.bin --format old --raw | head -20
+$ python dump_chart.py --bin-file v_hyper.bin --raw | head -20
 0,timesig,1028,0
 0,timing,118,0
 0,timing,4218,0
@@ -109,7 +109,7 @@ $ python dump_chart.py --bin-file v_hyper.bin --format old --raw | head -20
 The `--serial` option corresponds to `parse_chart.get_events_by_timestamp`, and outputs _headered_ CSV.
 
 ```
-$ python dump_chart.py --bin-file v_hyper.bin --format old --serial | head -20
+$ python dump_chart.py --bin-file v_hyper.bin --serial | head -20
 timestamp,key,keyon,keyoff,measurebeatend,bpm
 0,,,,m,150
 400,,,,b,
@@ -139,6 +139,6 @@ Provides a util function that, for a given .bin file, returns a summary of the c
 When run standalone, outputs the summary to stdout as a JSON object. Also supports outputting directly to a specified file.
 
 ````
-$ python summarize_chart.py --bin-file v_hyper.bin --format old
+$ python summarize_chart.py --bin-file v_hyper.bin
 {"notes":1134,"hold_notes":0,"bpm":"150","bpm_main":150,"bpm_main_type":"constant","bpm_steps":[150],"duration":124,"timesig_main":"4/4","timesig_main_type":"constant","timesig_steps":["4/4"],"timing":"standard","timing_steps":[[118,122,126,132,136,140]]}```
 ````

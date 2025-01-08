@@ -6,8 +6,8 @@ try:
 except ImportError:
   from .parse_chart import get_events
 
-def summarize_chart(bin_filename, new_format):
-  events = get_events(bin_filename, new_format)
+def summarize_chart(bin_filename):
+  events = get_events(bin_filename)
 
   notes = 0
   hold_notes = 0
@@ -124,7 +124,7 @@ Usage:
   ifstools iidx_kida.ifs
 
   # Print summary to stdout
-  python summarize_chart.py --bin-file iidx_kida_ifs/iidx_kida_op.bin --format new
+  python summarize_chart.py --bin-file iidx_kida_ifs/iidx_kida_op.bin
 """
 if __name__ == "__main__":
   import argparse
@@ -132,15 +132,13 @@ if __name__ == "__main__":
 
   parser = argparse.ArgumentParser()
   parser.add_argument("--bin-file", required=True)
-  parser.add_argument("--format", help="'new' or 'old'", required=True)
   parser.add_argument("--out-file", help="Output file. If omitted, will output to stdout.")
   args = parser.parse_args()
 
   bin_filename = args.bin_file
-  new_format = args.format == "new"
   out_filename = args.out_file
 
-  summary = summarize_chart(bin_filename, new_format)
+  summary = summarize_chart(bin_filename)
   summary_json = json.dumps(summary, separators=(",", ":"))
 
   if out_filename:

@@ -1,7 +1,7 @@
 """
 Usage:
   # Print events to stdout
-  python dump_chart.py --bin-file <chart_bin_file> --format [old|new] [--raw|--serial] [--out-file <output_file>]
+  python dump_chart.py --bin-file <chart_bin_file> [--raw|--serial] [--out-file <output_file>]
 """
 if __name__ == "__main__":
   import argparse
@@ -16,7 +16,6 @@ if __name__ == "__main__":
   parser.add_argument("--raw", action="store_true")
   parser.add_argument("--serial", action="store_true")
   parser.add_argument("--bin-file", required=True)
-  parser.add_argument("--format", help="'new' or 'old'", required=True)
   parser.add_argument("--out-file", help="Output file. If omitted, will output to stdout.")
   args = parser.parse_args()
 
@@ -29,11 +28,10 @@ if __name__ == "__main__":
     exit(1)
 
   bin_filename = args.bin_file
-  new_format = args.format == "new"
   out_filename = args.out_file
 
   if args.raw:
-    events = get_events(bin_filename, new_format, True)
+    events = get_events(bin_filename, True)
 
     if out_filename:
       with open(out_filename, "w") as f:
@@ -44,7 +42,7 @@ if __name__ == "__main__":
         print("%s,%s,%s,%s" % (timestamp, event_name, value, length))
 
   else: # serial
-    events_by_timestamp = get_events_by_timestamp(bin_filename, new_format)
+    events_by_timestamp = get_events_by_timestamp(bin_filename)
     timing_event_tss = [ts for ts, events in events_by_timestamp.items() if "timing" in events]
     has_variable_timing = len([events for events in events_by_timestamp.values() if "timing" in events]) >= 2
     has_variable_timesig = len([events for events in events_by_timestamp.values() if "timesig" in events]) >= 2
