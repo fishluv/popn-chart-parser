@@ -42,13 +42,12 @@ def summarize_chart(bin_filename):
       if length > 0:
         notes += 1
         hold_notes += 1
-    elif event_name in ["sample", "sample2", "timing"]:
+    elif event_name in ["timing"]:
       val1, val2 = value & 0xff, value >> 12
-      if event_name == "timing":
-        frame_idx, frame_val = val2, val1
-        # Rarely, charts will specify multiple timings on the same timestamp.
-        # Just count the most recently defined value.
-        framesets_by_ts[timestamp][frame_idx] = frame_val
+      frame_idx, frame_val = val2, val1
+      # Rarely, charts will specify multiple timings on the same timestamp.
+      # Just count the most recently defined value.
+      framesets_by_ts[timestamp][frame_idx] = frame_val
     elif event_name == "bpm":
       min_bpm = min(min_bpm, value)
       max_bpm = max(max_bpm, value)

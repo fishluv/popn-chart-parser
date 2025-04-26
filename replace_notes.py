@@ -60,12 +60,12 @@ if __name__ == "__main__":
 
   event_name_to_id = {
     "key": 0x0145,
-    "sample": 0x0245,
-    "unk0345": 0x0345,
+    "loadsample": 0x0245,
+    "playbgsample": 0x0345,
     "bpm": 0x0445,
     "timesig": 0x0545,
     "end": 0x0645,
-    "sample2": 0x0745,
+    "playsample": 0x0745,
     "timing": 0x0845,
     "unk0945": 0x0945,
     "unk0d45": 0x0d45,

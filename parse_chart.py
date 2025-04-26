@@ -6,12 +6,12 @@ def get_events(bin_filename, debug=False):
 
   event_id_to_name = {
     0x0145: "key",
-    0x0245: "sample",
-    0x0345: "unk0345",
+    0x0245: "loadsample",
+    0x0345: "playbgsample",
     0x0445: "bpm",
     0x0545: "timesig",
     0x0645: "end",
-    0x0745: "sample2",
+    0x0745: "playsample",
     0x0845: "timing",
     0x0945: "unk0945",
     0x0d45: "unk0d45",
