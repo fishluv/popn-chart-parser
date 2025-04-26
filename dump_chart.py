@@ -46,8 +46,10 @@ if __name__ == "__main__":
           frame_idx, frame_val = value >> 12, value & 0xff
           value = f"{frame_idx}/{frame_val}"
         elif event_name == "loadsample" or event_name == "playsample":
-          unk, sample_idx = value >> 12, value & 0xff
-          value = f"{unk}/{sample_idx}"
+          # For loadsample, val1 is the key that will trigger the sample.
+          # For playsample, val1 is unknown.
+          val1, sample_idx = value >> 12, value & 0xff
+          value = f"{val1}/{sample_idx}"
         print("%s,%s,%s,%s" % (timestamp, event_name, value, length))
 
   else: # serial
