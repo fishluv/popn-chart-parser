@@ -39,6 +39,15 @@ if __name__ == "__main__":
           f.write("%s,%s,%s,%s\n" % (timestamp, event_name, value, length))
     else:
       for timestamp, event_name, value, length in events:
+        if event_name == "timesig":
+          top, bottom = value >> 8, value & 0xff
+          value = f"{top}/{bottom}"
+        elif event_name == "timing":
+          frame_idx, frame_val = value >> 12, value & 0xff
+          value = f"{frame_idx}/{frame_val}"
+        elif event_name == "sample" or event_name == "sample2":
+          unk, sample_idx = value >> 12, value & 0xff
+          value = f"{unk}/{sample_idx}"
         print("%s,%s,%s,%s" % (timestamp, event_name, value, length))
 
   else: # serial
