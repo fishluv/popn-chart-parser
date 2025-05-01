@@ -32,7 +32,7 @@ if __name__ == "__main__":
       key = event_value & 0xff
       if no_zero and loaded_keysound_for_key[key] == 0:
         continue
-      played_samples.append(((timestamp, loaded_keysound_for_key[key], "key%s" % key)))
+      played_samples.append((timestamp, loaded_keysound_for_key[key], "key%s" % key))
 
     if event_name == "loadsample" and event_value & 0xff != 0:
       key, sample_idx = event_value >> 12, event_value & 0xff
