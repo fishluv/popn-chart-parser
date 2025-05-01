@@ -1,16 +1,17 @@
 from parse_chart import get_events
 
 """
-Merge two sorted iterables based on some predicate. If the predicate returns the same value for each iterable, prefer the first.
+Merge two sorted iterables based on some comparison predicate.
+If the predicate returns the same value for each iterable, prefer the first.
 """
-def _merge(first, second, predicate):
+def _merge(first, second, cmp):
   out = []
   i_first, i_second = 0, 0
   while i_first < len(first) and i_second < len(second):
     next_first = first[i_first] 
     next_second = second[i_second]
     # Prefer first for equality.
-    if predicate(next_first) <= predicate(next_second):
+    if cmp(next_first) <= cmp(next_second):
       out.append(next_first)
       i_first += 1
     else:
@@ -53,20 +54,24 @@ if __name__ == "__main__":
   # loadsample values are calculated by `key << 12 | sample_idx` but since sample_idx is 0 we can just do `key << 12`.
   new_dummy_loadsample_events = [(first_key_timestamp - 200, "loadsample", key << 12, 0) for key in range(9)]
 
-  # Convert loadsample events to playsample events.
+  # Generate new playsample events from existing loadsample and key events.
   new_playsample_events = []
-  for i, event in enumerate(old_events):
-    timestamp, event_name, event_value, _ = event
-    if event_name != "loadsample":
-      continue
-    # Ignore dummy loadsample events!
-    if event_value & 0xff == 0:
-      continue
+  loaded_sample_for_key = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+  for timestamp, event_name, event_value, _ in old_events:
+    if event_name == "key":
+      key = event_value & 0xff
+      if loaded_sample_for_key[key] == 0: # Ignore un-keysounded notes.
+        continue
 
-    key, sample_idx = event_value >> 12, event_value & 0xff
-    matching_key_event = next(e for j, e in enumerate(old_events) if j > i and e[1] == "key" and e[2] == key)
-    playsample_val = (8 << 12) | sample_idx # Purpose of `8` is unknown but all playsample events have it.
-    new_playsample_events.append((matching_key_event[0], "playsample", playsample_val, 0))
+      playsample_val = (8 << 12) | loaded_sample_for_key[key] # Purpose of `8` is unknown but all playsample events have it.
+      new_playsample_events.append((timestamp, "playsample", playsample_val, 0))
+
+    if event_name == "loadsample":
+      key, sample_idx = event_value >> 12, event_value & 0xff
+      if sample_idx == 0: # Ignore dummy loadsample events at beginning of chart.
+        continue
+
+      loaded_sample_for_key[key] = sample_idx
 
   new_events = _merge(new_dummy_loadsample_events, new_playsample_events, lambda event: event[0])
   final_events = _merge(old_events_without_loadsample, new_events, lambda event: event[0])

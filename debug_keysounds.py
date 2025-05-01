@@ -26,17 +26,17 @@ if __name__ == "__main__":
   sort_in_timestamp = args.sort_in_timestamp
 
   played_samples = []
-  loaded_keysound_for_key = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+  loaded_sample_for_key = [0, 0, 0, 0, 0, 0, 0, 0, 0]
   for timestamp, event_name, event_value, _ in get_events(bin_file):
     if event_name == "key":
       key = event_value & 0xff
-      if no_zero and loaded_keysound_for_key[key] == 0:
+      if no_zero and loaded_sample_for_key[key] == 0:
         continue
-      played_samples.append((timestamp, loaded_keysound_for_key[key], "key%s" % key))
+      played_samples.append((timestamp, loaded_sample_for_key[key], "key%s" % key))
 
     if event_name == "loadsample" and event_value & 0xff != 0:
       key, sample_idx = event_value >> 12, event_value & 0xff
-      loaded_keysound_for_key[key] = sample_idx
+      loaded_sample_for_key[key] = sample_idx
 
     if event_name in ["playbgsample", "playsample"]:
       sample_idx = event_value & 0xff
