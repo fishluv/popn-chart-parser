@@ -3,17 +3,21 @@ from parse_chart import get_events
 """
 Outputs a log of keysounds played for a chart.
 
+Used to debug autoplay_keysounds.py.
+
 Usage:
   python debug_keysounds.py --bin-file sorasumi_op.bin
+
+  diff <(python debug_keysounds.py -szt -b sorasumi_op.bin) <(python debug_keysounds.py -szt -b sorasumi_op_new.bin)
 """
 if __name__ == "__main__":
   import argparse
 
   parser = argparse.ArgumentParser()
-  parser.add_argument("--bin-file", required=True)
-  parser.add_argument("--no-source", action="store_true")
-  parser.add_argument("--no-zero", action="store_true")
-  parser.add_argument("--sort-in-timestamp", action="store_true")
+  parser.add_argument("-b", "--bin-file", required=True)
+  parser.add_argument("-s", "--no-source", action="store_true")
+  parser.add_argument("-z", "--no-zero", action="store_true")
+  parser.add_argument("-t", "--sort-in-timestamp", action="store_true")
   args = parser.parse_args()
 
   bin_file = args.bin_file
