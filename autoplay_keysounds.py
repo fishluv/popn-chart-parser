@@ -66,8 +66,6 @@ if __name__ == "__main__":
     key, sample_idx = event_value >> 12, event_value & 0xff
     matching_key_event = next(e for j, e in enumerate(old_events) if j > i and e[1] == "key" and e[2] == key)
     playsample_val = (8 << 12) | sample_idx # Purpose of `8` is unknown but all playsample events have it.
-    if timestamp < 10000:
-      print((matching_key_event[0], "playsample", playsample_val, 0))
     new_playsample_events.append((matching_key_event[0], "playsample", playsample_val, 0))
 
   new_events = _merge(new_dummy_loadsample_events, new_playsample_events, lambda event: event[0])
