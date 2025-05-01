@@ -25,7 +25,7 @@ if __name__ == "__main__":
   loaded_keysound_for_key = [0, 0, 0, 0, 0, 0, 0, 0, 0]
   for timestamp, event_name, event_value, _ in get_events(bin_file):
     if event_name == "key":
-      key = event_value
+      key = event_value & 0xff
       if no_zero and loaded_keysound_for_key[key] == 0:
         continue
       played_samples.append(((timestamp, loaded_keysound_for_key[key], "key%s" % key)))
