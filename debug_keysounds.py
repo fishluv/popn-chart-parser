@@ -8,14 +8,14 @@ Used to debug autoplay_keysounds.py.
 Usage:
   python debug_keysounds.py --bin-file sorasumi_op.bin
 
-  diff <(python debug_keysounds.py -szt -b sorasumi_op.bin) <(python debug_keysounds.py -szt -b sorasumi_op_new.bin)
+  diff <(python debug_keysounds.py -nzt -b sorasumi_op.bin) <(python debug_keysounds.py -nzt -b sorasumi_op_new.bin)
 """
 if __name__ == "__main__":
   import argparse
 
   parser = argparse.ArgumentParser()
   parser.add_argument("-b", "--bin-file", required=True)
-  parser.add_argument("-s", "--no-source", action="store_true")
+  parser.add_argument("-n", "--no-source", action="store_true")
   parser.add_argument("-z", "--no-zero", action="store_true")
   parser.add_argument("-t", "--sort-in-timestamp", action="store_true")
   args = parser.parse_args()

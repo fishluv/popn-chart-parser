@@ -15,9 +15,9 @@ if __name__ == "__main__":
   import csv
 
   parser = argparse.ArgumentParser()
-  parser.add_argument("--old-bin-file", required=True)
-  parser.add_argument("--new-serial-file", required=True)
-  parser.add_argument("--out-file", required=True)
+  parser.add_argument("-b", "--old-bin-file", required=True)
+  parser.add_argument("-s", "--new-serial-file", required=True)
+  parser.add_argument("-o", "--out-file", required=True)
   args = parser.parse_args()
 
   old_bin_filename = args.old_bin_file

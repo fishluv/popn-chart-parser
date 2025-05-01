@@ -32,8 +32,8 @@ if __name__ == "__main__":
   import argparse
 
   parser = argparse.ArgumentParser()
-  parser.add_argument("--bin-in-file", required=True)
-  parser.add_argument("--bin-out-file", required=True)
+  parser.add_argument("-b", "--bin-in-file", required=True)
+  parser.add_argument("-o", "--bin-out-file", required=True)
   args = parser.parse_args()
 
   bin_in_file = args.bin_in_file

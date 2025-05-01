@@ -13,10 +13,10 @@ if __name__ == "__main__":
     from .parse_chart import get_events, get_events_by_timestamp
 
   parser = argparse.ArgumentParser()
-  parser.add_argument("--raw", action="store_true")
-  parser.add_argument("--serial", action="store_true")
-  parser.add_argument("--bin-file", required=True)
-  parser.add_argument("--out-file", help="Output file. If omitted, will output to stdout.")
+  parser.add_argument("-r", "--raw", action="store_true")
+  parser.add_argument("-s", "--serial", action="store_true")
+  parser.add_argument("-b", "--bin-file", required=True)
+  parser.add_argument("-o", "--out-file", help="Output file. If omitted, will output to stdout.")
   args = parser.parse_args()
 
   if args.raw and args.serial:

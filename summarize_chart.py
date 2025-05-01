@@ -130,8 +130,8 @@ if __name__ == "__main__":
   import json
 
   parser = argparse.ArgumentParser()
-  parser.add_argument("--bin-file", required=True)
-  parser.add_argument("--out-file", help="Output file. If omitted, will output to stdout.")
+  parser.add_argument("-b", "--bin-file", required=True)
+  parser.add_argument("-o", "--out-file", help="Output file. If omitted, will output to stdout.")
   args = parser.parse_args()
 
   bin_filename = args.bin_file
