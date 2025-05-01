@@ -34,11 +34,11 @@ if __name__ == "__main__":
       key, sample_idx = event_value >> 12, event_value & 0xff
       loaded_keysound_for_key[key] = sample_idx
 
-    if event_name == "playsample":
+    if event_name in ["playbgsample", "playsample"]:
       sample_idx = event_value & 0xff
       if no_zero and sample_idx == 0: # rare and idk why but it happens
         continue
-      played_samples.append((timestamp, sample_idx, "playsample"))
+      played_samples.append((timestamp, sample_idx, event_name))
 
   if sort_in_timestamp:
     played_samples.sort()
