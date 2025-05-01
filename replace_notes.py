@@ -8,7 +8,7 @@ Usage:
   #   1) bin file for chart whose notes you want to replace
   #   2) serial chart dump file with new notes
 
-  python replace_notes.py --old-bin-file sorasumi_op.bin --new-serial-file sorasumi_op_new_serial.csv --out-file sorasumi_op_new.bin
+  python replace_notes.py -b sorasumi_op.bin -s sorasumi_op_new_serial.csv -o sorasumi_op_new.bin
 """
 if __name__ == "__main__":
   import argparse
