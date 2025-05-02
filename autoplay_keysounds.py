@@ -74,7 +74,9 @@ if __name__ == "__main__":
       loaded_sample_for_key[key] = sample_idx
 
   new_events = _merge(new_dummy_loadsample_events, new_playsample_events, lambda event: event[0])
-  final_events = _merge(old_events_without_loadsample, new_events, lambda event: event[0])
+  # Put new playsample events before matching key events.
+  # Not sure how important this is but this is what popnhax does.
+  final_events = _merge(new_events, old_events_without_loadsample, lambda event: event[0])
 
   event_name_to_id = {
     "key": 0x0145,
