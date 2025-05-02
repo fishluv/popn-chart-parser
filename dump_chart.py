@@ -1,7 +1,7 @@
 """
 Usage:
   # Print events to stdout
-  python dump_chart.py --bin-file <chart_bin_file> [--raw|--serial] [--out-file <output_file>]
+  python dump_chart.py -b <chart_bin_file> [-r|-s] [-o <output_file>]
 """
 if __name__ == "__main__":
   import argparse

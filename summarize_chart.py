@@ -123,7 +123,7 @@ Usage:
   ifstools iidx_kida.ifs
 
   # Print summary to stdout
-  python summarize_chart.py --bin-file iidx_kida_ifs/iidx_kida_op.bin
+  python summarize_chart.py -b iidx_kida_ifs/iidx_kida_op.bin
 """
 if __name__ == "__main__":
   import argparse

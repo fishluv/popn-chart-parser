@@ -27,7 +27,7 @@ Disables/autoplays keysounds for a chart.
 Accomplishes this by converting `loadsample` commands into `playsample` commands.
 
 Usage:
-  python autoplay_keysounds.py --bin-in-file sorasumi_op.bin --bin-out-file sorasumi_op_new.bin
+  python autoplay_keysounds.py -b sorasumi_op.bin -o sorasumi_op_auto.bin
 """
 if __name__ == "__main__":
   import argparse
