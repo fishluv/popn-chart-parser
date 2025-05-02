@@ -1,5 +1,23 @@
 from parse_chart import get_events
 
+# Not sure how important this actually is but...
+# in actual data, chart events _generally_ follow this ordering.
+_event_order = [
+  "bpm",
+  "timesig",
+  "playbgsample",
+  "timing",
+  "key",
+  "loadsample",
+  "playsample",
+  "measure",
+  "beat",
+  "end",
+]
+
+def _event_sort_value(event):
+  return (event[0], _event_order.index(event[1]))
+
 """
 Currently only supports old format.
 
@@ -43,20 +61,7 @@ if __name__ == "__main__":
       for key in keys:
         new_key_events.append((int(row["timestamp"]), "key", key, 0)) # only old format for now
   
-  # Merge events. Events must remain ordered by timestamp. For each timestamp, key events go first.
-  new_events = []
-  i_old, i_new = 0, 0
-  while i_old < len(old_events_without_key) and i_new < len(new_key_events):
-    next_old = old_events_without_key[i_old] 
-    next_new = new_key_events[i_new]
-    if next_new[0] <= next_old[0]:
-      new_events.append(next_new)
-      i_new += 1
-    else:
-      new_events.append(next_old)
-      i_old += 1
-  new_events += old_events_without_key[i_old:]
-  new_events += new_key_events[i_new:]
+  final_events = sorted(old_events_without_key + new_key_events, key=_event_sort_value)
 
   event_name_to_id = {
     "key": 0x0145,
@@ -75,7 +80,7 @@ if __name__ == "__main__":
   }
 
   with open(out_filename, "wb") as f:
-    for timestamp, event_name, event_value, _ in new_events:
+    for timestamp, event_name, event_value, _ in final_events:
       f.write(timestamp.to_bytes(4, byteorder="little"))
       f.write(event_name_to_id[event_name].to_bytes(2, byteorder="little"))
       f.write(event_value.to_bytes(2, byteorder="little"))
