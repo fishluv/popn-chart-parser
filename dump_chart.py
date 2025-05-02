@@ -39,17 +39,17 @@ if __name__ == "__main__":
           f.write("%s,%s,%s,%s\n" % (timestamp, event_name, value, length))
     else:
       for timestamp, event_name, value, length in events:
-        if event_name == "timesig":
-          top, bottom = value >> 8, value & 0xff
-          value = f"{top}/{bottom}"
-        elif event_name == "timing":
-          frame_idx, frame_val = value >> 12, value & 0xff
-          value = f"{frame_idx}/{frame_val}"
-        elif event_name == "loadsample" or event_name == "playsample":
-          # For loadsample, val1 is the key that will trigger the sample.
-          # For playsample, val1 is unknown.
-          val1, sample_idx = value >> 12, value & 0xff
-          value = f"{val1}/{sample_idx}"
+        if event_name in ["timesig", "key"]:
+          # timesig: val1 = top, val2 = bottom
+          # key: val1 = highlight zone index, val2 = key 0-8
+          val1, val2 = value >> 8, value & 0xff
+          value = f"{val1}/{val2}"
+        elif event_name in ["timing", "loadsample", "playsample"]:
+          # timing: val1 = frame index, val2 = frame value
+          # loadsample: val1 = key 0-8 that will trigger sample, val2 = sample index
+          # playsample: val1 = ?, val2 = sample index
+          val1, val2 = value >> 12, value & 0xff
+          value = f"{val1}/{val2}"
         print("%s,%s,%s,%s" % (timestamp, event_name, value, length))
 
   else: # serial
