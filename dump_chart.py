@@ -48,7 +48,7 @@ if __name__ == "__main__":
           # timing: val1 = frame index, val2 = frame value
           # loadsample: val1 = key 0-8 that will trigger sample, val2 = sample index
           # playsample: val1 = ?, val2 = sample index
-          val1, val2 = value >> 12, value & 0xff
+          val1, val2 = value >> 12, value & 0xfff
           value = f"{val1}/{val2}"
         print("%s,%s,%s,%s" % (timestamp, event_name, value, length))
 

@@ -43,7 +43,7 @@ struct Key {
 } [[color("ff0000")]];
 
 fn formatSample(u16 sample) {
-    u8 keysound = sample & 0xff;
+    u8 keysound = sample & 0xfff;
     u8 note = sample >> 12;
     return std::format("keysound {}, note {}", keysound, formatNote(note));
 };
@@ -71,7 +71,7 @@ struct End {
 } [[color("222222")]];
 
 fn formatSample2(u16 sample2) {
-    return std::format("keysound {}", sample2 & 0xff);
+    return std::format("keysound {}", sample2 & 0xfff);
 };
 
 struct Sample2 {

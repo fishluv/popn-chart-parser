@@ -67,7 +67,7 @@ if __name__ == "__main__":
       new_playsample_events.append((timestamp, "playsample", playsample_val, 0))
 
     if event_name == "loadsample":
-      key, sample_idx = event_value >> 12, event_value & 0xff
+      key, sample_idx = event_value >> 12, event_value & 0xfff
       if sample_idx == 0: # Ignore dummy loadsample events at beginning of chart.
         continue
 

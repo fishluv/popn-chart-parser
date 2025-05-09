@@ -34,12 +34,12 @@ if __name__ == "__main__":
         continue
       played_samples.append((timestamp, loaded_sample_for_key[key], "key%s" % key))
 
-    if event_name == "loadsample" and event_value & 0xff != 0:
-      key, sample_idx = event_value >> 12, event_value & 0xff
+    if event_name == "loadsample" and event_value & 0xfff != 0:
+      key, sample_idx = event_value >> 12, event_value & 0xfff
       loaded_sample_for_key[key] = sample_idx
 
     if event_name in ["playbgsample", "playsample"]:
-      sample_idx = event_value & 0xff
+      sample_idx = event_value & 0xfff
       if no_zero and sample_idx == 0: # rare and idk why but it happens
         continue
       played_samples.append((timestamp, sample_idx, event_name))
