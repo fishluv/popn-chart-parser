@@ -93,7 +93,7 @@ def get_events_by_timestamp(bin_filename):
       events_by_timestamp[timestamp][event_name] = "m"
 
     elif event_name == "key":
-      btn_ord = value & 0xff
+      btn_ord = value & 0xf
       btn_comm = btn_ord + 1
 
       if length > 0: # hold note
@@ -114,7 +114,7 @@ def get_events_by_timestamp(bin_filename):
     elif event_name == "timing":
       if "timing" not in events_by_timestamp[timestamp]:
         events_by_timestamp[timestamp]["timing"] = {}
-      frame_idx, frame_val = value >> 12, value & 0xff
+      frame_idx, frame_val = value >> 12, value & 0xfff
       events_by_timestamp[timestamp]["timing"][frame_idx] = frame_val
 
   return events_by_timestamp

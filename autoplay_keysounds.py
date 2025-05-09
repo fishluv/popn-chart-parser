@@ -59,7 +59,7 @@ if __name__ == "__main__":
   loaded_sample_for_key = [0, 0, 0, 0, 0, 0, 0, 0, 0]
   for timestamp, event_name, event_value, _ in old_events:
     if event_name == "key":
-      key = event_value & 0xff
+      key = event_value & 0xf
       if loaded_sample_for_key[key] == 0: # Ignore un-keysounded notes.
         continue
 

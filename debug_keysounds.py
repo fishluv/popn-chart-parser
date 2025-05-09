@@ -29,7 +29,7 @@ if __name__ == "__main__":
   loaded_sample_for_key = [0, 0, 0, 0, 0, 0, 0, 0, 0]
   for timestamp, event_name, event_value, _ in get_events(bin_file):
     if event_name == "key":
-      key = event_value & 0xff
+      key = event_value & 0xf
       if no_zero and loaded_sample_for_key[key] == 0:
         continue
       played_samples.append((timestamp, loaded_sample_for_key[key], "key%s" % key))
@@ -40,8 +40,6 @@ if __name__ == "__main__":
 
     if event_name in ["playbgsample", "playsample"]:
       sample_idx = event_value & 0xfff
-      if no_zero and sample_idx == 0: # rare and idk why but it happens
-        continue
       played_samples.append((timestamp, sample_idx, event_name))
 
   if sort_in_timestamp:
